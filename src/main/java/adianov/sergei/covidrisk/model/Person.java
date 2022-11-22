@@ -12,8 +12,7 @@ public class Person {
     private final ObjectProperty<LocalDate> birthday;
 
     public Person() {
-        birthday=null;
-        fio=null;
+        this(null);
     }
 
     public Person(String fio){
