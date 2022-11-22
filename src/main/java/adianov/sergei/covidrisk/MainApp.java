@@ -2,7 +2,10 @@ package adianov.sergei.covidrisk;
 
 import java.io.IOException;
 
+import adianov.sergei.covidrisk.model.Person;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
@@ -12,6 +15,16 @@ import javafx.stage.Stage;
 public class MainApp extends Application {
     private Stage primaryStage;
     private BorderPane rootLayout;
+    private ObservableList<Person> personData = FXCollections.observableArrayList();
+
+    public MainApp(){
+        personData.add(new Person("Случайнов Поликарп Евгеньевич"));
+        personData.add(new Person("Рандомов Александр Васильевич"));
+    }
+
+    public ObservableList<Person> getPersonData(){
+        return personData;
+    }
 
     @Override
     public void start(Stage primaryStage){
@@ -47,6 +60,9 @@ public class MainApp extends Application {
             AnchorPane personOverview = (AnchorPane) loader.load();
 
             rootLayout.setCenter(personOverview);
+
+            PersonOverviewController controller = loader.getController();
+            controller.setMainApp(this);
         }
         catch (IOException e){
             e.printStackTrace();
