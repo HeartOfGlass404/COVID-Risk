@@ -16,9 +16,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 
 public class MainApp extends Application {
     private Stage primaryStage;
@@ -146,14 +143,7 @@ public class MainApp extends Application {
 
     public void loadPersonDataFromFile(File file){
         try{
-            JAXBContext context = JAXBContext
-                    .newInstance(PersonListWrapper.class);
-            Unmarshaller um = context.createUnmarshaller();
 
-            PersonListWrapper wrapper =(PersonListWrapper) um.unmarshal(file);
-
-            personData.clear();
-            personData.addAll(wrapper.getPersons());
 
             setPersonFilePath(file);
         }
@@ -169,17 +159,7 @@ public class MainApp extends Application {
 
     public void savePersonDataToFile(File file) {
         try {
-            JAXBContext context = JAXBContext
-                    .newInstance(PersonListWrapper.class);
-            Marshaller m = context.createMarshaller();
-            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-            // Обёртываем наши данные об адресатах.
-            PersonListWrapper wrapper = new PersonListWrapper();
-            wrapper.setPersons(personData);
-
-            // Маршаллируем и сохраняем XML в файл.
-            m.marshal(wrapper, file);
 
             // Сохраняем путь к файлу в реестре.
             setPersonFilePath(file);
