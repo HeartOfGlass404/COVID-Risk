@@ -1,17 +1,24 @@
 package adianov.sergei.covidrisk;
 
+import java.io.File;
 import java.io.IOException;
-
+import java.util.prefs.Preferences;
 import adianov.sergei.covidrisk.model.Person;
+import adianov.sergei.covidrisk.model.PersonListWrapper;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 
 public class MainApp extends Application {
     private Stage primaryStage;
@@ -43,6 +50,9 @@ public class MainApp extends Application {
             loader.setLocation(MainApp.class.getResource("RootLayout.fxml"));
             rootLayout = (BorderPane) loader.load();
 
+            RootLayoutController controller = loader.getController();
+            controller.setMainApp(this);
+
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
             primaryStage.show();
@@ -51,6 +61,10 @@ public class MainApp extends Application {
             e.printStackTrace();
         }
 
+        File file = getPersonsFilePath();
+        if (file != null) {
+            loadPersonDataFromFile(file);
+        }
 
     }
 
@@ -97,11 +111,85 @@ public class MainApp extends Application {
         }
     }
 
+
     public Stage getPrimaryStage() {
         return primaryStage;
     }
 
     public static void main(String[] args){
         launch();
+    }
+    public File getPersonsFilePath(){
+        Preferences prefs = Preferences.userNodeForPackage(MainApp.class);
+        String filePath = prefs.get("filePath",null);
+        if(filePath != null){
+            return new File(filePath);
+        }
+        else {
+            return null;
+        }
+    }
+
+    public void setPersonFilePath(File file){
+        Preferences prefs = Preferences.userNodeForPackage(MainApp.class);
+        if(file != null){
+            prefs.put("filePath",file.getPath());
+
+            primaryStage.setTitle("Расчёт рисков заболевания COVID -" + file.getName());
+        }
+        else {
+            prefs.remove("filePath");
+
+            primaryStage.setTitle("Расчёт рисков заболевания COVID");
+        }
+    }
+
+    public void loadPersonDataFromFile(File file){
+        try{
+            JAXBContext context = JAXBContext
+                    .newInstance(PersonListWrapper.class);
+            Unmarshaller um = context.createUnmarshaller();
+
+            PersonListWrapper wrapper =(PersonListWrapper) um.unmarshal(file);
+
+            personData.clear();
+            personData.addAll(wrapper.getPersons());
+
+            setPersonFilePath(file);
+        }
+        catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Could not load data");
+            alert.setContentText("Could not load data from file:\n" + file.getPath());
+
+            alert.showAndWait();
+        }
+    }
+
+    public void savePersonDataToFile(File file) {
+        try {
+            JAXBContext context = JAXBContext
+                    .newInstance(PersonListWrapper.class);
+            Marshaller m = context.createMarshaller();
+            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+            // Обёртываем наши данные об адресатах.
+            PersonListWrapper wrapper = new PersonListWrapper();
+            wrapper.setPersons(personData);
+
+            // Маршаллируем и сохраняем XML в файл.
+            m.marshal(wrapper, file);
+
+            // Сохраняем путь к файлу в реестре.
+            setPersonFilePath(file);
+        } catch (Exception e) { // catches ANY exception
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Could not save data");
+            alert.setContentText("Could not save data to file:\n" + file.getPath());
+
+            alert.showAndWait();
+        }
     }
 }
