@@ -143,7 +143,7 @@ public class MainApp extends Application {
 
     public void loadPersonDataFromFile(File file){
         try{
-
+            OpenWorkbook.Open();
 
             setPersonFilePath(file);
         }
@@ -159,7 +159,7 @@ public class MainApp extends Application {
 
     public void savePersonDataToFile(File file) {
         try {
-
+            CreateWorkbook.Create();
 
             // Сохраняем путь к файлу в реестре.
             setPersonFilePath(file);
@@ -173,3 +173,5 @@ public class MainApp extends Application {
         }
     }
 }
+
+// manifest руками

@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ButtonBar?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="300.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adianov.sergei.covidrisk.PersonEditDialogController">
+<AnchorPane prefHeight="300.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adianov.sergei.covidrisk.PersonEditDialogController">
    <children>
       <GridPane layoutX="10.0" layoutY="5.0" prefHeight="165.0" prefWidth="490.0" AnchorPane.bottomAnchor="130.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
         <columnConstraints>
@@ -35,6 +29,14 @@
                   <Insets left="15.0" right="15.0" />
                </GridPane.margin>
             </TextField>
+            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <children>
+                  <CheckBox mnemonicParsing="false" text="Фактор 1" />
+                  <CheckBox mnemonicParsing="false" text="Фактор 2" />
+                  <CheckBox mnemonicParsing="false" text="Фактор 3" />
+               </children>
+            </HBox>
+            <Label text="Факторы риска" GridPane.rowIndex="2" />
          </children>
       </GridPane>
       <ButtonBar layoutX="294.0" layoutY="260.0">
