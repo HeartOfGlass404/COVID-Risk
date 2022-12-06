@@ -160,6 +160,7 @@ public class MainApp extends Application {
     public void savePersonDataToFile(File file) {
         try {
             CreateWorkbook.Create();
+            
 
             // Сохраняем путь к файлу в реестре.
             setPersonFilePath(file);
