@@ -16,7 +16,7 @@ public class RootLayoutController {
     @FXML
     private void handleNew(){
         mainApp.getPersonData().clear();
-        mainApp.setPersonFilePath(null);
+
     }
 
     @FXML
@@ -36,13 +36,9 @@ public class RootLayoutController {
 
     @FXML
     private void handleSave(){
-        File personFile = mainApp.getPersonsFilePath();
-        if(personFile != null){
-            mainApp.savePersonDataToFile(personFile);
-        }
-        else {
-            handleSaveAs();
-        }
+
+
+
     }
 
     @FXML

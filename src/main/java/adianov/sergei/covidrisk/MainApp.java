@@ -2,7 +2,6 @@ package adianov.sergei.covidrisk;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.prefs.Preferences;
 import adianov.sergei.covidrisk.model.Person;
 import adianov.sergei.covidrisk.model.PersonListWrapper;
 import javafx.application.Application;
@@ -58,12 +57,9 @@ public class MainApp extends Application {
             e.printStackTrace();
         }
 
-        File file = getPersonsFilePath();
-        if (file != null) {
-            loadPersonDataFromFile(file);
         }
 
-    }
+
 
     public void showPersonOverview(){
         try {
@@ -116,36 +112,11 @@ public class MainApp extends Application {
     public static void main(String[] args){
         launch();
     }
-    public File getPersonsFilePath(){
-        Preferences prefs = Preferences.userNodeForPackage(MainApp.class);
-        String filePath = prefs.get("filePath",null);
-        if(filePath != null){
-            return new File(filePath);
-        }
-        else {
-            return null;
-        }
-    }
-
-    public void setPersonFilePath(File file){
-        Preferences prefs = Preferences.userNodeForPackage(MainApp.class);
-        if(file != null){
-            prefs.put("filePath",file.getPath());
-
-            primaryStage.setTitle("Расчёт рисков заболевания COVID -" + file.getName());
-        }
-        else {
-            prefs.remove("filePath");
-
-            primaryStage.setTitle("Расчёт рисков заболевания COVID");
-        }
-    }
 
     public void loadPersonDataFromFile(File file){
         try{
             OpenWorkbook.Open();
 
-            setPersonFilePath(file);
         }
         catch (Exception e){
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -163,7 +134,6 @@ public class MainApp extends Application {
             
 
             // Сохраняем путь к файлу в реестре.
-            setPersonFilePath(file);
         } catch (Exception e) { // catches ANY exception
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
@@ -175,4 +145,3 @@ public class MainApp extends Application {
     }
 }
 
-// manifest руками

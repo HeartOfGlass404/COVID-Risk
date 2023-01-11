@@ -10,7 +10,7 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
-                        <version>3.1.0</version>
+                        <version>3.0.0</version>
                         <executions>
                             <execution>
                                 <id>java-agent</id>
@@ -18,12 +18,12 @@
                                     <goal>exec</goal>
                                 </goals>
                                 <configuration>
-                                    <executable>covidrisk</executable>
+                                    <executable>java</executable>
                                     <workingDirectory>${project.build.directory}</workingDirectory>
                                     <arguments>
                                         <argument>-classpath</argument>
                                         <classpath/>
-                                        <argument>adianov.sergei.covidrisk.MainApp}</argument>
+                                        <argument>${mainClass}</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
@@ -58,11 +58,9 @@
                                     <goal>test</goal>
                                 </goals>
                                 <phase>test</phase>
-
                             </execution>
                         </executions>
                         <configuration>
-
                             <fallback>false</fallback>
                             <buildArgs>
                                 <arg>-H:DashboardDump=covid -H:+DashboardAll</arg>
@@ -76,28 +74,26 @@
 
     <modelVersion>4.0.0</modelVersion>
 
+
     <groupId>adianov.sergei</groupId>
     <artifactId>COVID-Risk</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>COVID-Risk</name>
 
     <properties>
+        <javafx.version>19-ea+7</javafx.version>
+        <graalvm.version>22.3.0</graalvm.version>
         <native.maven.plugin.version>0.9.18</native.maven.plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.8.2</junit.version>
         <maven.compiler.source>${java.specification.version}</maven.compiler.source>
         <maven.compiler.target>${java.specification.version}</maven.compiler.target>
-        <imageName>COVID Risking</imageName>
+        <imageName>COVID Risk</imageName>
         <mainClass>adianov.sergei.covidrisk.MainApp</mainClass>
     </properties>
 
     <dependencies>
 
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-to-slf4j</artifactId>
-            <version>2.8.2</version>
-        </dependency>
 
         <dependency>
             <groupId>org.apache.poi</groupId>
@@ -161,9 +157,39 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.graalvm.sdk</groupId>
+            <artifactId>graal-sdk</artifactId>
+            <version>${graalvm.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.graalvm.buildtools</groupId>
+                <artifactId>native-maven-plugin</artifactId>
+                <version>0.9.18</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!--The plugin figures out what jar files it needs to pass to the native image
+                    and what the executable main class should be. -->
+                    <!--<mainClass>${app.mainClass}</mainClass>-->
+                    <imageName>Covid-risk</imageName>
+                    <buildArgs>
+                        --no-fallback
+                    </buildArgs>
+                    <skip>false</skip>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -240,7 +266,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <executable>D:\Java\graalvm-ce-java19-22.3.0\bin\java.exe</executable>
-                            <mainClass>adianov.sergei.covidrisk/adianov.sergei.covidrisk.HelloApplication</mainClass>
+                            <mainClass>src/main/java/adianov/sergei/covidrisk/MainApp.java</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>
